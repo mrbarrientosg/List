@@ -22,27 +22,35 @@
  SOFTWARE.
  */
 
-#ifndef List_h
-#define List_h
+#ifndef list_h
+#define list_h
 
-typedef struct List List;
+typedef struct list list;
+
+/**
+ @typedef
+ Prototipo de funcion para eliminar de memoria el objeto que se guarda dentro de la lista.
+ 
+ @param object Puntero al objecto guardado.
+ */
+typedef void (*list_release_object_callback)(void *object);
 
 /**
  Crea un nuevo puntero de tipo List.
-
+ 
  @return Puntero a la nueva List.
  */
-List *createList(void);
+list *list_init (list_release_object_callback release);
 
 /**
  Devuele el primer dato de la List.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Puntero al dato contenido en la cabeza.
  */
-void *firstList(List *list);
+void *list_first (list *list);
 
 /**
  Devuele el siguiente dato de la List.
@@ -55,24 +63,24 @@ void *firstList(List *list);
  Ejemplo:
  
  @code
- void *data = firstList(list);
+ void *data = list_first(list);
  
  while (data != NULL) {
-    // Aqui puede manipular el dato o imprimirlo.
-    data = nextList(list);
+ // Aqui puede manipular el dato o imprimirlo.
+ data = list_next(list);
  }
  */
-void *nextList(List *list);
+void *list_next (list *list);
 
 /**
  Devuelve el ultimo dato de la List.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Puntero al dato.
  */
-void *lastList(List *list);
+void *list_last (list *list);
 
 /**
  Devuele el anterior dato de la List.
@@ -83,24 +91,24 @@ void *lastList(List *list);
  @return Puntero al dato.
  
  @code
- void *data = lastList(list);
+ void *data = list_last(list);
  
  while (data != NULL) {
-     // Aqui puede manipular el dato o imprimirlo.
-     data = prevList(list);
+ // Aqui puede manipular el dato o imprimirlo.
+ data = list_prev(list);
  }
  */
-void *prevList(List *list);
+void *list_prev (list *list);
 
 /**
  Cantidad de elementos en la List.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Cantidad de elementos en la List.
  */
-long listCount(List *list);
+long list_size (list *list);
 
 /**
  Prueba si la List está vacía.
@@ -110,75 +118,84 @@ long listCount(List *list);
  @param list Puntero a la List.
  @return 1 (true) si y solo si la List no contiene elementos; 0 (false) lo contrario.
  */
-int emptyList(List *list);
+int list_empty (list *list);
 
 /**
  Inserta un elemento en al inicio de la List.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushFront(List *list, const void *data);
+void list_push_front (list *list, const void *data);
 
 /**
  Inserta un elemento al final de la lista.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushBack(List *list, const void *data);
+void list_push_back (list *list, const void *data);
 
 /**
  Inserta un elemento despues del current. El current se actualiza cuando se reccore la lista con las funciones firstList, etc.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushCurrent(List *list, const void *data);
+void list_push_current (list *list, const void *data);
 
 /**
- Elimina el nodo del inicio de la List.
+ Elimina el nodo del inicio de la lista,
+ si esta activada la funcion release, esta eliminara
+ de la memoria el puntero que apunta hacia el objeto.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void *popFront(List *list);
+void *list_pop_front (list *list);
 
 /**
- Elimina el nodo final de la List.
+ Elimina el nodo final de la lista,
+ si esta activada la funcion release, esta eliminara
+ de la memoria el puntero que apunta hacia el objeto.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void *popBack(List *list);
+void *list_pop_back (list *list);
 
 /**
- Elimina el nodo en donde se encuentre el current, actualiza el current al siguiente de este.
+ Elimina el nodo en donde se encuentre el current,
+ actualiza el current al siguiente de este.
+ Si esta activada la funcion release, esta eliminara
+ de la memoria el puntero que apunta hacia el objeto.
  
  Complejidad: O(1)
-
+ 
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void *popCurrent(List *list);
+void *list_pop_current (list *list);
 
 /**
- Elimina todos los nodos de la List.
+ Elimina todos los nodos de la lista,
+ si esta activada la funcion release, esta eliminara
+ de la memoria el puntero que apunta hacia el objeto.
  
  Complejidad: O(n)
-
+ 
  @param list Puntero a la List.
  */
-void removeAllList(List *list);
+void list_release (list **list);
 
-#endif /* List_h */
+#endif /* list_h */

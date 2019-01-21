@@ -24,51 +24,52 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include "List.h"
+#include "list.h"
 
 int main(int argc, const char * argv[]) {
-        
-    List * lista = createList();
     
-    int * data = NULL;
+    //    list *lista = list_init (free);
+    list *lista = list_init (NULL);
+    
+    int *data = NULL;
     
     int i;
     
     for (i = 0; i < 10; i++) {
-        data = (int *)malloc(sizeof(int));
+        data = (int *) malloc (sizeof (int));
         *data = i;
-        pushBack(lista, data);
+        list_push_back (lista, data);
     }
     
-    data = firstList(lista);
+    data = list_first (lista);
     
-    data = (int *)malloc(sizeof(int));
+    data = (int *) malloc (sizeof (int));
     *data = 11;
     
-    pushCurrent(lista, data);
+    list_push_current (lista, data);
     
-    data = firstList(lista);
-    
-    while (data != NULL) {
-        printf("%d\n", *data);
-        data = nextList(lista);
-    }
-    
-    printf("\n");
-    
-    free(popBack(lista));
-    free(popFront(lista));
-    
-    data = lastList(lista);
+    data = list_first (lista);
     
     while (data != NULL) {
-        printf("%d\n", *data);
-        free(data);
-        data = prevList(lista);
+        printf ("%d\n", *data);
+        data = list_next (lista);
     }
     
-    removeAllList(lista);
+    printf ("\n");
+    
+    // Si esta agrega la funcion release esto no es necesario
+    free (list_pop_back (lista));
+    free (list_pop_front (lista));
+    
+    data = list_last (lista);
+    
+    while (data != NULL) {
+        printf ("%d\n", *data);
+        free (data);
+        data = list_prev (lista);
+    }
+    
+    list_release (&lista);
     
     return 0;
 }

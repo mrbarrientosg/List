@@ -22,113 +22,135 @@
  SOFTWARE.
  */
 
-#include "List.h"
+#include "list.h"
 #include <stdlib.h>
 #include <assert.h>
 
-typedef struct Node Node;
+typedef struct node node;
 
-static Node *createNode(const void *data);
-
-struct Node {
+struct node {
     /*! Puntero al dato */
     const void *data;
     
     /*! Puntero al siguiente nodo */
-    Node *next;
+    node *next;
     
     /*! Puntero al anterior nodo */
-    Node *prev;
+    node *prev;
 };
 
-struct List {
+struct list {
     /*! Puntero al incio (cabeza) de la lista */
-    Node *head;
+    node *head;
     
     /*! Puntero al final (cola) de la lista */
-    Node *tail;
+    node *tail;
     
     /*! Punteor para poder recorrer la lista */
-    Node *current;
+    node *current;
     
     /*! Cantidad de elemento en la lista */
     long count;
+    
+    list_release_object_callback release;
 };
 
-static Node *createNode(const void *data) {
-    Node *new = (Node *)malloc(sizeof(Node));
-    assert(new != NULL); // No hay memoria para reservar el Nodo.
+static node *
+node_init (const void *data) {
+    node *new = (node *) malloc (sizeof (node));
+    
+    assert (new != NULL); // No hay memoria para reservar el Nodo.
+    
     new->data = data;
     new->prev = NULL;
     new->next = NULL;
+    
     return new;
 }
 
-List *createList() {
-    List *new = (List *)malloc(sizeof(List));
-    assert(new != NULL); // No hay memoria para reservar la Lista.
+list *
+list_init (list_release_object_callback release) {
+    list *new = (list * )malloc (sizeof (list));
+    
+    assert (new != NULL); // No hay memoria para reservar la Lista.
+    
     new->head = new->tail = new->current = NULL;
     new->count = 0;
+    new->release = release;
+    
     return new;
 }
 
-long listCount(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-   
-    if (list->head == NULL) return 0;
-   
+long
+list_size (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
+    if (list->head == NULL)
+        return 0;
+    
     return list->count;
 }
 
-int emptyList(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
+int
+list_empty (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
     return list->count == 0;
 }
 
-void *firstList(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL) return NULL;
+void *
+list_first (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
+    if (list->head == NULL)
+        return NULL;
     
     list->current = list->head;
     
-    return (void *)list->current->data;
+    return (void *) list->current->data;
 }
 
-void *nextList(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL || list->current == NULL || list->current->next == NULL) return NULL;
+void *
+list_next (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
+    if (list->head == NULL || list->current == NULL || list->current->next == NULL)
+        return NULL;
     
     list->current = list->current->next;
     
-    return (void *)list->current->data;
+    return (void *) list->current->data;
 }
 
-void *lastList(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL) return NULL;
-   
+void *
+list_last (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
+    if (list->head == NULL)
+        return NULL;
+    
     list->current = list->tail;
     
-    return (void *)list->current->data;
+    return (void *) list->current->data;
 }
 
-void *prevList(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL || list->current == NULL || list->current->prev == NULL) return NULL;
+void *
+list_prev (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
+    
+    if (list->head == NULL || list->current == NULL || list->current->prev == NULL)
+        return NULL;
     
     list->current = list->current->prev;
     
-    return (void *)list->current->data;
+    return (void *) list->current->data;
 }
 
-void pushFront(List *list, const void *data) {
-    assert(list != NULL); // list no puede ser NULL.
+void
+list_push_front (list *list, const void *data) {
+    assert (list != NULL); // list no puede ser NULL.
     
-    Node *new = createNode(data);
+    node *new = node_init (data);
     
     if (list->head == NULL) {
         list->tail = new;
@@ -141,10 +163,11 @@ void pushFront(List *list, const void *data) {
     list->count += 1;
 }
 
-void pushBack(List *list, const void *data) {
-    assert(list != NULL); // list no puede ser NULL.
+void
+list_push_back (list *list, const void *data) {
+    assert (list != NULL); // list no puede ser NULL.
     
-    Node *new = createNode(data);
+    node *new = node_init (data);
     
     if (list->head == NULL) {
         list->head = new;
@@ -157,12 +180,14 @@ void pushBack(List *list, const void *data) {
     list->count += 1;
 }
 
-void pushCurrent(List *list, const void *data) {
-    assert(list != NULL); // list no puede ser NULL.
+void
+list_push_current (list *list, const void *data) {
+    assert (list != NULL); // list no puede ser NULL.
     
-    if (list->current == NULL) return;
+    if (list->current == NULL)
+        return;
     
-    Node *new = createNode(data);
+    node *new = node_init (data);
     
     new->next = list->current->next;
     new->prev = list->current;
@@ -176,18 +201,25 @@ void pushCurrent(List *list, const void *data) {
     if (list->current == list->tail) {
         list->tail = new;
     }
-        
+    
     list->count += 1;
 }
 
-void *popFront(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL) return NULL;
+void *
+list_pop_front (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
     
-    Node *aux = list->head;
+    if (list->head == NULL)
+        return NULL;
     
-    void *data = (void *)aux->data;
+    node *aux = list->head;
+    
+    void *data = (void *) aux->data;
+    
+    if (list->release != NULL) {
+        list->release (data);
+        data = NULL;
+    }
     
     if (list->head == list->tail) {
         list->tail = list->head = NULL;
@@ -196,22 +228,29 @@ void *popFront(List *list) {
         list->head->prev = NULL;
     }
     
-    free(aux);
-   
+    free (aux);
+    
     list->count -= 1;
     
     return data;
 }
 
-void *popBack(List *list) {
-    assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL) return NULL;
+void *
+list_pop_back (list *list) {
+    assert (list != NULL); // list no puede ser NULL.
     
-    Node *aux = list->tail;
-
-    void *data = (void *)aux->data;
-
+    if (list->head == NULL)
+        return NULL;
+    
+    node *aux = list->tail;
+    
+    void *data = (void *) aux->data;
+    
+    if (list->release != NULL) {
+        list->release (data);
+        data = NULL;
+    }
+    
     if (list->tail == list->head) {
         list->tail = list->head = NULL;
     } else {
@@ -219,24 +258,26 @@ void *popBack(List *list) {
         list->tail->next = NULL;
     }
     
-    free(aux);
+    free (aux);
     
     list->count -= 1;
     
     return data;
 }
 
-void *popCurrent(List *list) {
+void *
+list_pop_current (list *list) {
     assert(list != NULL); // list no puede ser NULL.
-
-    if (list->head == NULL || list->current == NULL) return NULL;
     
-    Node *aux = list->current;
+    if (list->head == NULL || list->current == NULL)
+        return NULL;
+    
+    node *aux = list->current;
     
     if (list->current == list->head) {
-        return popFront(list);
+        return list_pop_front (list);
     } else if (list->current == list->tail) {
-        return popBack(list);
+        return list_pop_back (list);
     } else {
         if (aux->next != NULL) {
             aux->next->prev = aux->prev;
@@ -246,23 +287,33 @@ void *popCurrent(List *list) {
             aux->prev->next = aux->next;
         }
     }
-
-    void *data = (void *)aux->data;
+    
+    void *data = (void *) aux->data;
     
     list->current = aux->next;
     
-    free(aux);
+    if (list->release != NULL) {
+        list->release (data);
+        data = NULL;
+    }
+    
+    free (aux);
     
     list->count -= 1;
     
     return data;
 }
 
-void removeAllList(List *list) {
+void
+list_release (list **list) {
     assert(list != NULL); // list no puede ser NULL.
-
-    while (list->head != NULL) {
-        popFront(list);
+    assert((*list) != NULL);
+    
+    while ((*list)->head != NULL) {
+        list_pop_front (*list);
     }
+    
+    free(*list);
+    *list = NULL;
 }
 
