@@ -28,35 +28,35 @@
 
 typedef struct Node Node;
 
-static Node * createNode(const void * data);
+static Node *createNode(const void *data);
 
 struct Node {
     /*! Puntero al dato */
-    const void * data;
+    const void *data;
     
     /*! Puntero al siguiente nodo */
-    Node * next;
+    Node *next;
     
     /*! Puntero al anterior nodo */
-    Node * prev;
+    Node *prev;
 };
 
 struct List {
     /*! Puntero al incio (cabeza) de la lista */
-    Node * head;
+    Node *head;
     
     /*! Puntero al final (cola) de la lista */
-    Node * tail;
+    Node *tail;
     
     /*! Punteor para poder recorrer la lista */
-    Node * current;
+    Node *current;
     
     /*! Cantidad de elemento en la lista */
     long count;
 };
 
-static Node * createNode(const void * data) {
-    Node * new = (Node *)malloc(sizeof(Node));
+static Node *createNode(const void *data) {
+    Node *new = (Node *)malloc(sizeof(Node));
     assert(new != NULL); // No hay memoria para reservar el Nodo.
     new->data = data;
     new->prev = NULL;
@@ -64,15 +64,15 @@ static Node * createNode(const void * data) {
     return new;
 }
 
-List * createList() {
-    List * new = (List *)malloc(sizeof(List));
+List *createList() {
+    List *new = (List *)malloc(sizeof(List));
     assert(new != NULL); // No hay memoria para reservar la Lista.
     new->head = new->tail = new->current = NULL;
     new->count = 0;
     return new;
 }
 
-long listCount(List * list) {
+long listCount(List *list) {
     assert(list != NULL); // list no puede ser NULL.
    
     if (list->head == NULL) return 0;
@@ -80,12 +80,12 @@ long listCount(List * list) {
     return list->count;
 }
 
-int emptyList(List * list) {
+int emptyList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
     return list->count == 0;
 }
 
-void * firstList(List * list) {
+void *firstList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL) return NULL;
@@ -95,7 +95,7 @@ void * firstList(List * list) {
     return (void *)list->current->data;
 }
 
-void * nextList(List * list) {
+void *nextList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL || list->current == NULL || list->current->next == NULL) return NULL;
@@ -105,7 +105,7 @@ void * nextList(List * list) {
     return (void *)list->current->data;
 }
 
-void * lastList(List * list) {
+void *lastList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL) return NULL;
@@ -115,7 +115,7 @@ void * lastList(List * list) {
     return (void *)list->current->data;
 }
 
-void * prevList(List * list) {
+void *prevList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL || list->current == NULL || list->current->prev == NULL) return NULL;
@@ -125,10 +125,10 @@ void * prevList(List * list) {
     return (void *)list->current->data;
 }
 
-void pushFront(List * list, const void * data) {
+void pushFront(List *list, const void *data) {
     assert(list != NULL); // list no puede ser NULL.
     
-    Node * new = createNode(data);
+    Node *new = createNode(data);
     
     if (list->head == NULL) {
         list->tail = new;
@@ -141,10 +141,10 @@ void pushFront(List * list, const void * data) {
     list->count += 1;
 }
 
-void pushBack(List * list, const void * data) {
+void pushBack(List *list, const void *data) {
     assert(list != NULL); // list no puede ser NULL.
     
-    Node * new = createNode(data);
+    Node *new = createNode(data);
     
     if (list->head == NULL) {
         list->head = new;
@@ -157,12 +157,12 @@ void pushBack(List * list, const void * data) {
     list->count += 1;
 }
 
-void pushCurrent(List * list, const void * data) {
+void pushCurrent(List *list, const void *data) {
     assert(list != NULL); // list no puede ser NULL.
     
     if (list->current == NULL) return;
     
-    Node * new = createNode(data);
+    Node *new = createNode(data);
     
     new->next = list->current->next;
     new->prev = list->current;
@@ -180,14 +180,14 @@ void pushCurrent(List * list, const void * data) {
     list->count += 1;
 }
 
-void * popFront(List * list) {
+void *popFront(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL) return NULL;
     
-    Node * aux = list->head;
+    Node *aux = list->head;
     
-    void * data = (void *)aux->data;
+    void *data = (void *)aux->data;
     
     if (list->head == list->tail) {
         list->tail = list->head = NULL;
@@ -203,14 +203,14 @@ void * popFront(List * list) {
     return data;
 }
 
-void * popBack(List * list) {
+void *popBack(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL) return NULL;
     
-    Node * aux = list->tail;
+    Node *aux = list->tail;
 
-    void * data = (void *)aux->data;
+    void *data = (void *)aux->data;
 
     if (list->tail == list->head) {
         list->tail = list->head = NULL;
@@ -226,12 +226,12 @@ void * popBack(List * list) {
     return data;
 }
 
-void * popCurrent(List * list) {
+void *popCurrent(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     if (list->head == NULL || list->current == NULL) return NULL;
     
-    Node * aux = list->current;
+    Node *aux = list->current;
     
     if (list->current == list->head) {
         return popFront(list);
@@ -247,7 +247,7 @@ void * popCurrent(List * list) {
         }
     }
 
-    void * data = (void *)aux->data;
+    void *data = (void *)aux->data;
     
     list->current = aux->next;
     
@@ -258,7 +258,7 @@ void * popCurrent(List * list) {
     return data;
 }
 
-void removeAllList(List * list) {
+void removeAllList(List *list) {
     assert(list != NULL); // list no puede ser NULL.
 
     while (list->head != NULL) {

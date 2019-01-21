@@ -32,7 +32,7 @@ typedef struct List List;
 
  @return Puntero a la nueva List.
  */
-List * createList(void);
+List *createList(void);
 
 /**
  Devuele el primer dato de la List.
@@ -42,7 +42,7 @@ List * createList(void);
  @param list Puntero a la List.
  @return Puntero al dato contenido en la cabeza.
  */
-void * firstList(List * list);
+void *firstList(List *list);
 
 /**
  Devuele el siguiente dato de la List.
@@ -55,14 +55,14 @@ void * firstList(List * list);
  Ejemplo:
  
  @code
- void * data = firstList(list);
+ void *data = firstList(list);
  
  while (data != NULL) {
     // Aqui puede manipular el dato o imprimirlo.
     data = nextList(list);
  }
  */
-void * nextList(List * list);
+void *nextList(List *list);
 
 /**
  Devuelve el ultimo dato de la List.
@@ -72,7 +72,7 @@ void * nextList(List * list);
  @param list Puntero a la List.
  @return Puntero al dato.
  */
-void * lastList(List * list);
+void *lastList(List *list);
 
 /**
  Devuele el anterior dato de la List.
@@ -83,14 +83,14 @@ void * lastList(List * list);
  @return Puntero al dato.
  
  @code
- void * data = lastList(list);
+ void *data = lastList(list);
  
  while (data != NULL) {
      // Aqui puede manipular el dato o imprimirlo.
      data = prevList(list);
  }
  */
-void * prevList(List * list);
+void *prevList(List *list);
 
 /**
  Cantidad de elementos en la List.
@@ -100,7 +100,7 @@ void * prevList(List * list);
  @param list Puntero a la List.
  @return Cantidad de elementos en la List.
  */
-long listCount(List * list);
+long listCount(List *list);
 
 /**
  Prueba si la List está vacía.
@@ -110,7 +110,7 @@ long listCount(List * list);
  @param list Puntero a la List.
  @return 1 (true) si y solo si la List no contiene elementos; 0 (false) lo contrario.
  */
-int emptyList(List * list);
+int emptyList(List *list);
 
 /**
  Inserta un elemento en al inicio de la List.
@@ -120,7 +120,7 @@ int emptyList(List * list);
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushFront(List * list, const void * data);
+void pushFront(List *list, const void *data);
 
 /**
  Inserta un elemento al final de la lista.
@@ -130,7 +130,7 @@ void pushFront(List * list, const void * data);
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushBack(List * list, const void * data);
+void pushBack(List *list, const void *data);
 
 /**
  Inserta un elemento despues del current. El current se actualiza cuando se reccore la lista con las funciones firstList, etc.
@@ -140,7 +140,7 @@ void pushBack(List * list, const void * data);
  @param list Puntero a la List.
  @param data Puntero al dato que se quiere guardar.
  */
-void pushCurrent(List * list, const void * data);
+void pushCurrent(List *list, const void *data);
 
 /**
  Elimina el nodo del inicio de la List.
@@ -150,7 +150,7 @@ void pushCurrent(List * list, const void * data);
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void * popFront(List * list);
+void *popFront(List *list);
 
 /**
  Elimina el nodo final de la List.
@@ -160,7 +160,7 @@ void * popFront(List * list);
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void * popBack(List * list);
+void *popBack(List *list);
 
 /**
  Elimina el nodo en donde se encuentre el current, actualiza el current al siguiente de este.
@@ -170,7 +170,7 @@ void * popBack(List * list);
  @param list Puntero a la List.
  @return Puntero del dato eliminado.
  */
-void * popCurrent(List * list);
+void *popCurrent(List *list);
 
 /**
  Elimina todos los nodos de la List.
@@ -179,6 +179,6 @@ void * popCurrent(List * list);
 
  @param list Puntero a la List.
  */
-void removeAllList(List * list);
+void removeAllList(List *list);
 
 #endif /* List_h */
